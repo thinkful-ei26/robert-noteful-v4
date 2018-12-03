@@ -21,6 +21,12 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
+  if (typeof newUser.username !== 'string' || typeof newUser.password !== 'string') {
+    const err = new Error('username and password must be string');
+    err.status = 415;
+    return next(err);
+  }
+
   if (!username) {
     const err = new Error('Missing `username` in request body');
     err.status = 400;
