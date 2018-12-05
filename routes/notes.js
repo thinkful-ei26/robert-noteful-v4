@@ -119,6 +119,17 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
+  const updatedUserId = req.params.userId;
+  const currentUser = req.user.id;
+
+  console.log(updatedUserId);
+
+
+  // if (userId !== ) {
+  //   const err = new Error('THIS IS NOT YOUR NOTE');
+  //   err.status = 400;
+  //   return next(err);
+  // }
 
   const toUpdate = {};
   const updateableFields = ['title', 'content', 'folderId', 'tags'];
@@ -162,8 +173,9 @@ router.put('/:id', (req, res, next) => {
     toUpdate.$unset = {folderId : 1};
   }
 
-  Note.findByIdAndUpdate(id, toUpdate, { new: true })
+  Note.findOneAndUpdate({_id: id, userId: currentUser}, toUpdate, { new: true })
     .then(result => {
+      console.log(result);
       if (result) {
         res.json(result);
       } else {
