@@ -13,6 +13,9 @@ router.use('/', passport.authenticate('jwt', { session: false, failWithError: tr
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
   const { searchTerm, folderId, tagId } = req.query;
+  const userId = req.user.id;
+
+  console.log(userId);
 
   let filter = {};
 
@@ -29,6 +32,12 @@ router.get('/', (req, res, next) => {
     filter.tags = tagId;
   }
 
+  if (userId) {
+    filter.userId = userId;
+  }
+
+  console.log(filter);
+
   Note.find(filter)
     .populate('tags')
     .sort({ updatedAt: 'desc' })
@@ -43,6 +52,7 @@ router.get('/', (req, res, next) => {
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
+  const userId = req.user.id;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -51,7 +61,7 @@ router.get('/:id', (req, res, next) => {
     return next(err);
   }
 
-  Note.findById(id)
+  Note.findOne({ _id: id, userId })
     .populate('tags')
     .then(result => {
       if (result) {
