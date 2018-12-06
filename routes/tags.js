@@ -81,6 +81,7 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
+  const currentId = req.user.id;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -95,9 +96,9 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateTag = { name };
+  const updateTag = { name, userId: currentId };
 
-  Tag.findByIdAndUpdate(id, updateTag, { new: true })
+  Tag.findOneAndUpdate({_id: id, userId: currentId}, updateTag, { new: true })
     .then(result => {
       if (result) {
         res.json(result);
