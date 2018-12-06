@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const schema = new mongoose.Schema({
+const noteSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: String,
   folderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Folder' },
@@ -11,10 +11,10 @@ const schema = new mongoose.Schema({
 });
 
 // Add `createdAt` and `updatedAt` fields
-schema.set('timestamps', true);
+noteSchema.set('timestamps', true);
 
 // Transform output during `res.json(data)`, `console.log(data)` etc.
-schema.set('toJSON', {
+noteSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, result) => {
     delete result._id;
@@ -22,4 +22,4 @@ schema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Note', schema);
+module.exports = mongoose.model('Note', noteSchema);
