@@ -13,8 +13,9 @@ router.use('/', passport.authenticate('jwt', { session: false, failWithError: tr
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
+  const currentId = req.user.id;
 
-  Tag.find()
+  Tag.find({userId: currentId })
     .sort('name')
     .then(results => {
       res.json(results);
@@ -27,6 +28,7 @@ router.get('/', (req, res, next) => {
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
+  const currentId = req.user.id;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -35,7 +37,7 @@ router.get('/:id', (req, res, next) => {
     return next(err);
   }
 
-  Tag.findById(id)
+  Tag.findOne({_id: id, userId: currentId})
     .then(result => {
       if (result) {
         res.json(result);
