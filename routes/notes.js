@@ -10,12 +10,77 @@ const router = express.Router();
 
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
 
+// ************************This Validates the FolderIDs
+// const validateFolderId = function (folderId, userId) {
+
+//   if (folderId === undefined) {
+//     return Promise.resolve();
+//   }
+
+//   if (folderId === '') {
+//     const err = new Error('The folderId is not valid');
+//     err.status = 400;
+//     return Promise.reject(err);
+//   }
+
+//   if (folderId && !mongoose.Types.ObjectId.isValid(folderId)) {
+//     const err = new Error('The folderId is not valid');
+//     err.status = 400;
+//     return Promise.reject(err);
+//   }
+
+//   return Folder.countDocuments({_id: folderId, userId})
+//     .then(count => {
+//       if (count === 0) {
+//         const err = new Error('The folderId is not valid');
+//         err.status = 400;
+//         return Promise.reject(err);
+//       }
+//     });
+// };
+
+
+// ************************This Validates the Tags
+// const validateTagIds = function (tags, userId) {
+
+//   if (tags === undefined) {
+//     return Promise.resolve();
+//   }
+
+//   if (!Array.isArray(tags)) {
+//     const err = new Error('The tags property must be an array');
+//     err.status = 400;
+//     return Promise.reject(err);
+//   }
+
+//   const badIds = tags.filter((tag) => !mongoose.Types.ObjectId.isValid(tag));
+
+//   if (badIds.length) {
+//     const err = new Error('The tags array contains an invalid id');
+//     err.status = 400;
+//     return Promise.reject(err);
+//   }
+
+//   return Tag.countDocuments({
+//     $and: [
+//       _id: { $in: tags },
+//       userId
+//     ]
+//   })
+//     .then(count => {
+//       if (tags.length > count) {
+//         const err = new Error('The folderId is not valid');
+//         err.status = 400;
+//         return Promise.reject(err);
+//       }
+//     });
+// };
+
+
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
   const { searchTerm, folderId, tagId } = req.query;
   const userId = req.user.id;
-
-  console.log(userId);
 
   let filter = {};
 
@@ -35,8 +100,6 @@ router.get('/', (req, res, next) => {
   if (userId) {
     filter.userId = userId;
   }
-
-  console.log(filter);
 
   Note.find(filter)
     .populate('tags')
