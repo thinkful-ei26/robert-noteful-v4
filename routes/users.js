@@ -8,11 +8,11 @@ const User = require('../models/user');
 const router = express.Router();
 
 router.post('/', (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, fullname } = req.body;
   
-  const newUser = { username, password };
+  const newUser = { username, password, fullname };
   
-  const requiredFields = ['username', 'password'];
+  const requiredFields = ['username', 'password', 'fullname'];
   
   const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -30,11 +30,11 @@ router.post('/', (req, res, next) => {
 
   if (nonStringField) {
     const err = new Error(`Field: '${nonStringField}' must be type string.`);
-    err.status = 415;
+    err.status = 422;
     return next(err);
   }
 
-  const explicityTrimmedFields = ['username', 'password'];
+  const explicityTrimmedFields = ['username', 'password', 'fullname'];
   const nonTrimmedField = explicityTrimmedFields.find(
     field => req.body[field].trim() !== req.body[field]
   );
@@ -83,7 +83,8 @@ router.post('/', (req, res, next) => {
     .then(digest => {
       const newUser = {
         username,
-        password: digest
+        password: digest,
+        fullname
       };
       return User.create(newUser);
     })
@@ -92,7 +93,7 @@ router.post('/', (req, res, next) => {
     })
     .catch(err => {
       if (err.code === 11000) {
-        err = new Error('Username name already exists');
+        err = new Error('Username already exists');
         err.status = 400;
       }
       next(err);
