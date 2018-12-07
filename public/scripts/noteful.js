@@ -150,7 +150,7 @@ const noteful = (function () {
   }
 
   function handleNoteSearchSubmit() {
-    $('.js-notes-search-form').on('submit', event => {
+    $('.js-notes-search-form').on('keyup', event => {
       event.preventDefault();
 
       store.currentQuery.searchTerm = $(event.currentTarget).find('input').val();
@@ -326,6 +326,7 @@ const noteful = (function () {
       event.preventDefault();
 
       const newTagName = $('.js-new-tag-entry').val();
+      $('.js-new-tag-entry').val('');
       api.create('/api/tags', { name: newTagName })
         .then(() => {
           return api.search('/api/tags');
