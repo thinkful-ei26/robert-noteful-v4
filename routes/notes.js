@@ -38,6 +38,9 @@ const validateFolderId = function (folderId, userId) {
         err.status = 400;
         return Promise.reject(err);
       }
+    })
+    .catch(err => {
+      return Promise.reject(err);
     });
 };
 
@@ -70,10 +73,13 @@ const validateTagIds = function (tags, userId) {
   })
     .then(count => {
       if (tags.length > count) {
-        const err = new Error('The folderId is not valid');
+        const err = new Error('The tag is not valid');
         err.status = 400;
         return Promise.reject(err);
       }
+    })
+    .catch(err => {
+      return Promise.reject(err);
     });
 };
 
@@ -235,7 +241,6 @@ router.put('/:id', (req, res, next) => {
 
   Note.findOneAndUpdate({_id: id, userId: currentUser}, toUpdate, { new: true })
     .then(result => {
-      console.log(result);
       if (result) {
         res.json(result);
       } else {

@@ -127,7 +127,6 @@ describe('Noteful API - Users', function () {
         .request(app)
         .post('/api/users')
         .send({ username: ` ${username} `, password, fullname })
-
         .then(res => {
           expect(res).to.have.status(422);
           expect(res.body.message).to.equal('Field: \'username\' cannot start or end with whitespace.');
@@ -151,7 +150,6 @@ describe('Noteful API - Users', function () {
         .request(app)
         .post('/api/users')
         .send({ username: '', password, fullname })
-
         .then(res => {
           expect(res).to.have.status(422);
           expect(res.body.message).to.equal('Field: \'username\' must be at least 1 characters long');
