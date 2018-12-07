@@ -12,20 +12,12 @@ const router = express.Router();
 
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
 
-let folderId;
-
 // ************************This Validates the FolderIDs
 const validateFolderId = function (folderId, userId) {
 
   if (folderId === undefined) {
     return Promise.resolve();
   }
-
-  // if (folderId === '') {
-  //   const err = new Error('The folderId is not valid');
-  //   err.status = 400;
-  //   return Promise.reject(err);
-  // }
 
   if (!mongoose.Types.ObjectId.isValid(folderId)) {
     const err = new Error('The folderId is not valid');
