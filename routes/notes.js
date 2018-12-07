@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
 
+let folderId;
+
 // ************************This Validates the FolderIDs
 const validateFolderId = function (folderId, userId) {
 

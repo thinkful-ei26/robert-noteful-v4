@@ -19,7 +19,7 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 const sandbox = sinon.createSandbox();
 
-describe('Noteful API - Notes', function () {
+describe.only('Noteful API - Notes', function () {
   let token;
   let user;
 
@@ -98,6 +98,7 @@ describe('Noteful API - Notes', function () {
             expect(item.id).to.equal(data[i].id);
             expect(item.title).to.equal(data[i].title);
             expect(item.content).to.equal(data[i].content);
+            expect(item.userId).to.equal(data[i].userId.toString());
             expect(new Date(item.createdAt)).to.eql(data[i].createdAt);
             expect(new Date(item.updatedAt)).to.eql(data[i].updatedAt);
           });
@@ -124,10 +125,11 @@ describe('Noteful API - Notes', function () {
           expect(res.body).to.have.length(data.length);
           res.body.forEach(function (item, i) {
             expect(item).to.be.a('object');
-            expect(item).to.include.all.keys('id', 'title', 'createdAt', 'userId', 'updatedAt', 'tags'); // Note: folderId and content are optional
+            expect(item).to.include.all.keys('id', 'title', 'createdAt', 'userId', 'updatedAt', 'tags');
             expect(item.id).to.equal(data[i].id);
             expect(item.title).to.equal(data[i].title);
             expect(item.content).to.equal(data[i].content);
+            expect(item.userId).to.equal(data[i].userId.toString());
             expect(new Date(item.createdAt)).to.eql(data[i].createdAt);
             expect(new Date(item.updatedAt)).to.eql(data[i].updatedAt);
           });
